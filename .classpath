@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/flex and air 14"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="external_src"/>
+	<classpathentry kind="src" path="assets"/>
+	<classpathentry exported="true" kind="lib" path="libs"/>
+	<classpathentry kind="output" path="/out/production/TwitterSphereMobile"/>
+</classpath>

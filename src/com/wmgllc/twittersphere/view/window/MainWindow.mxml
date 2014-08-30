@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" width="100%" height="100%"
+		 addedToStage="initialise()" 
+		 xmlns:messagewindow="com.wmgllc.twittersphere.view.component.messagewindow.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.paranoidferret.util.FileSerializer;
+			import com.wmgllc.twittersphere.view.component.scene.SphereScene;
+			private var sphereScene:SphereScene;
+			
+			import mx.events.FlexEvent;
+			private var logSequenze:Array = new Array();
+			
+			private var logTimer:Timer;
+			
+			private var prefs:FileSerializer=new FileSerializer();
+			
+			private var prefsObj:Object;
+			
+			protected function initialise():void
+			{
+				prefsObj=FileSerializer.readObjectFromFile("myPrefs");
+				if(prefsObj==null) {
+					trace("no preferences here");
+					prefsObj=new Object();
+					prefsObj.base_url="http://nba3x.wassermanexperience.com/socialsphere/scripts/";
+					FileSerializer.writeObjectToFile(prefsObj,"myPrefs");
+				} else {
+					trace("preferences base url:"+prefsObj.base_url);
+				}
+				baseUrlText.text=prefsObj.base_url;
+				logTimer = new Timer(10000,1);
+				logTimer.addEventListener(TimerEvent.TIMER, resetTimer);
+				logTimer.start();
+				
+				sphereScene = new SphereScene();
+				container.addChild(sphereScene);
+				sphereScene.initialise(prefsObj.base_url);
+				
+				messageLayer.initialise(sphereScene);
+			}
+			
+			private function resetTimer(e:TimerEvent):void {
+				trace("reset timer");
+				logTimer.reset();
+				logSequenze=new Array();
+				logTimer.start();
+			}
+			private function checkLog(item:Number):void {
+				trace("pushing"+item);
+				logSequenze.push(item);
+				trace(logSequenze);
+				if(logSequenze[0]==0 && logSequenze[1]==1 && logSequenze[2]==2 ) {
+					trace("OPEN THE GATES");
+					prefsGroup.visible=true;
+				}
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				prefsObj.base_url=baseUrlText.text;
+				FileSerializer.writeObjectToFile(prefsObj,"myPrefs");
+				NativeApplication.nativeApplication.exit();
+			}
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				prefsGroup.visible=false;
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:SpriteVisualElement id="container" width="1000" height="1000"/>
+	<messagewindow:MessageLayer id="messageLayer"/>
+	<s:Group width="100%" height="100%">
+		<s:Button width="300" height="100" click="checkLog(0)" />
+		<s:Button width="300" height="100" bottom="0"  click="checkLog(1)" />
+		<s:Button width="300" height="100" bottom="0" right="0"  click="checkLog(2)" />
+	</s:Group>
+	<s:HGroup id="prefsGroup" visible="false" right="0">
+		<s:TextInput width="800" fontSize="24" id="baseUrlText" />
+		<s:Button label="Save and Close" fontSize="24" click="button1_clickHandler(event)" />
+		<s:Button label="Cancel" click="button2_clickHandler(event)" fontSize="24" />
+	</s:HGroup>
+</s:Group>

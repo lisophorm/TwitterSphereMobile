@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 width="100%" height="100%" 
+		 xmlns:messagewindow="com.wmgllc.twittersphere.view.component.messagewindow.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import avmplus.getQualifiedClassName;
+			
+			import com.greensock.TweenMax;
+			import com.wmgllc.twittersphere.controller.event.MessageWindowEvent;
+			import com.wmgllc.twittersphere.controller.event.WindowSpacerEvent;
+			import com.wmgllc.twittersphere.model.entity.MessageDTO;
+			import com.wmgllc.twittersphere.utilities.Definitions;
+			import com.wmgllc.twittersphere.view.component.scene.SphereScene;
+			
+			import mx.core.IVisualElement;
+			import mx.core.UIComponent;
+			
+			protected var columnTick : int = 0;
+			
+			protected var columns : Vector.<VGroup>;
+			protected var windows : Vector.<MessageWindow>;
+			
+			[Bindable]
+			protected var messageGap : int = 30;
+			
+			protected var scene : SphereScene;
+			
+			public function initialise(scene_ : SphereScene):void
+			{
+				scene = scene_;
+				
+				scene.addEventListener(MessageWindowEvent.OPEN_WINDOW, openWindowHandler);
+				
+				columns = new <VGroup>[column0, column1];
+				windows = new <MessageWindow>[];
+				
+				var demoDTO : MessageDTO = new MessageDTO();
+				demoDTO.messageName = "isambard poulson";
+				demoDTO.messageProfilePicture = "https://pbs.twimg.com/profile_images/1502158020/profile_bigger.jpg";
+				demoDTO.messageBody = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+				demoDTO.messagePicture = "http://stancewords.stanceworks.netdna-cdn.com/wp-content/uploads/2012/05/stanceworks-bmw-e9-2800.jpg";
+		
+				demoDTO.commentName = null;
+				demoDTO.commentProfilePicture = "https://pbs.twimg.com/profile_images/1502158020/profile_bigger.jpg";
+				demoDTO.commentBody = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+				
+				demoDTO.platform = Definitions.PLATFORM_FACEBOOK;
+				
+				demoWindow.initialise(demoDTO, null);
+				demoWindow.addEventListener(MouseEvent.CLICK, touchWindowHandler);
+			}
+			
+			protected function openWindowHandler(event : MessageWindowEvent):void
+			{
+				var messageWindow : MessageWindow = new MessageWindow();
+				messageWindow.initialise(event.messageDTO, event.tileReference3D);
+				messageWindow.addEventListener(MouseEvent.CLICK, touchWindowHandler);
+				messageWindow.addEventListener(MessageWindowEvent.HEIGHT_UPDATED, windowHeightUpdatedHandler);
+				
+				inMotionContainer.addElement(messageWindow);
+				
+				windows.push(messageWindow);
+				
+				var tilePosition : Vector3D = scene.getTweetPosition(event.tileReference3D);
+				var destination : Point = new Point(columns[columnTick].x, 0);
+				
+				TweenMax.fromTo(messageWindow, .5, {x:tilePosition.x, y:tilePosition.y, scaleX:.1, scaleY:.1}, 
+					{x:destination.x, y:destination.y, scaleX:1, scaleY:1});
+				TweenMax.delayedCall(.2, insertWindowSpacer, [messageWindow, columns[columnTick]]);
+				
+				columnTick ++;
+				columnTick %= columns.length;
+			}
+			
+			protected function insertWindowSpacer(window : MessageWindow, column:VGroup):void
+			{
+				var placeholderSpacer : WindowSpacer = new WindowSpacer();
+				column.addElementAt(placeholderSpacer, 0);
+				placeholderSpacer.addEventListener(WindowSpacerEvent.SPACER_EXPANSION_COMPLETE, spacerExpansionCompleteHandler);
+				placeholderSpacer.expand(window);
+			}
+			
+			protected function spacerExpansionCompleteHandler(event : WindowSpacerEvent):void
+			{
+				var spacer : WindowSpacer = event.target as WindowSpacer;
+				spacer.removeEventListener(WindowSpacerEvent.SPACER_EXPANSION_COMPLETE, spacerExpansionCompleteHandler);
+				
+				checkWindowVisibility();
+			}
+			
+			protected function windowHeightUpdatedHandler(event : MessageWindowEvent):void
+			{
+				trace("MessageLayer :: windowHeightUpdatedHandler");
+				checkWindowVisibility();
+			}
+			
+			protected function checkWindowVisibility():void
+			{
+				for each(var column : VGroup in columns)
+				{
+					for (var i : int = column.numElements-1; i >=0; i--)
+					{
+						var element : IVisualElement = column.getElementAt(i);
+						trace("checkWindowVisibility :: " + i + " :: " + element.depth);
+						if(getQualifiedClassName(element) == "com.wmgllc.twittersphere.view.component.messagewindow::MessageWindow")
+						{
+							var window : MessageWindow = element as MessageWindow;
+							var bottomEdge : Number = window.y + window.height;
+							
+							trace("checkWindowVisibility :: " + bottomEdge + " :: " + i);
+							if(window.y + window.height > Definitions.APPLICATION_HEIGHT)
+								closeWindow(window);
+						}
+					}
+				}
+			}
+			
+			protected function touchWindowHandler(event : MouseEvent):void
+			{
+				var window : MessageWindow = event.currentTarget as MessageWindow;
+				closeWindow(window);
+			}
+			
+			protected function closeWindow(window : MessageWindow):void
+			{
+				trace("MessageLayer :: closeWindow :: " + window.depth);
+				
+				var column : VGroup;
+				var n : int;
+				var i : int;
+				
+				outer: for each(column in columns)
+				{
+					n = column.numElements;
+					for(i = 0; i < n; i ++)
+					{
+						if(column.getElementAt(i) == window)
+						{
+							var replacementSpacer : WindowSpacer = new WindowSpacer();
+							replacementSpacer.height = window.height;
+							column.addElementAt(replacementSpacer, i);
+							replacementSpacer.contract();
+							break outer;
+						}
+					}
+				}
+				
+				inMotionContainer.addElement(window);
+				window.x = column.x;
+				
+				var tilePosition : Vector3D = scene.getTweetPosition(window.tileReference);
+				
+				TweenMax.to(window, .5, {x:tilePosition.x, y:tilePosition.y, z:tilePosition.z, scaleX:.1, scaleY:.1,
+					onComplete:finaliseWindow, onCompleteParams:[window]});
+				
+				n = windows.length;
+				for(i = 0; i < n; i ++)
+				{
+					if(windows[i] == window)
+					{
+						windows.slice(i, 1);
+						break;
+					}
+				}
+				window.removeEventListener(MessageWindowEvent.HEIGHT_UPDATED, checkWindowVisibility);
+			}
+			
+			protected function finaliseWindow(window : MessageWindow):void
+			{
+				if(inMotionContainer.containsElement(window))
+				{
+					inMotionContainer.removeElement(window);
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Group width="100%" height="100%" id="inMotionContainer"/>
+	<s:VGroup id="column0" width="{Definitions.MESSAGE_WIDTH}" left="20" gap="20"/>
+	<s:VGroup id="column1" width="{Definitions.MESSAGE_WIDTH}" right="20" gap="20"/>
+	
+	<messagewindow:MessageWindow id="demoWindow" visible="false" includeInLayout="false"/>
+	
+</s:Group>

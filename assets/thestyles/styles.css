@@ -1,0 +1,33 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+
+@font-face{
+	src:url('/fonts/Verdana.ttf');
+	fontFamily:Verdana;
+}
+
+@font-face{
+	src:url('/fonts/VerdanaBold.ttf');
+	fontFamily:Verdana;
+	fontWeight:bold;
+}
+
+.twitterName{
+	fontFamily:Verdana;
+	color:#33CCFF;
+	fontWeight:bold;
+	fontSize:24px;
+}
+
+.facebookName{
+	fontFamily:Verdana;
+	color:#3D5A98;
+	fontWeight:bold;
+	fontSize:24px;
+}
+
+.messageBody{
+	fontFamily:Verdana;
+	color:#000000;
+	fontSize:18px;
+}

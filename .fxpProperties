@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<fxpProperties abbreviated="false" authoringTool="Flex Builder" compiles="true" parentProject="017617af-7717-46f5-be67-c79ea203ed15" projectUUID="017617af-7717-46f5-be67-c79ea203ed15" pureCatalystProject="false" sdkVersion="4.12.1" uuid="85d9ba19-b800-407b-9d32-5f57c0cabb91" version="15">
+  <projects/>
+  <src>
+    <linked isMain="false" location="assets" path="assets" position="0" uuid="85d9ba19-b800-407b-9d32-5f57c0cabb91"/>
+    <linked isMain="false" location="external_src" path="external_src" position="1" uuid="85d9ba19-b800-407b-9d32-5f57c0cabb91"/>
+  </src>
+  <swc>
+    <linked location="sdkPlaceHolder" path="sdkPlaceHolder" position="0" uuid="85d9ba19-b800-407b-9d32-5f57c0cabb91"/>
+    <linked location="C:/Users/Alfonso/Documents/GitHub/TwitterSphereMobile/libs" path="/libs" position="1" uuid="85d9ba19-b800-407b-9d32-5f57c0cabb91"/>
+  </swc>
+  <misc/>
+  <theme/>
+  <mxmlFormattingPrefs groupAttributesByState="true" maxLineWidth="100" mxmlAlignAttributes="true" mxmlAttributeOrder="id,userLabel,includeIn,excludeFrom,visible,x,y,z,left,right,top,bottom,width,height,minWidth,minHeight,maxWidth,maxHeight,label" mxmlKeepAttributeValuesOrganized="true"/>
+</fxpProperties>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" jdk="flex and air 14" jdk_type="Flex SDK Type (new)">
+	<output-test url="file://$MODULE_DIR$/../out/test/TwitterSphereMobile"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="$MODULE_DIR$/libs" scope="COMPILE">
+		<relative-module-cls project-related="file://$PROJECT_DIR$/TwitterSphereMobile/libs"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/TwitterSphereMobile/libs/greensock.swc!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/TwitterSphereMobile/libs/flashassets.swc!/"/>
+	</lib>
+</component>

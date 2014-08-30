@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 width="{Definitions.MESSAGE_WIDTH}" 
+		 xmlns:messagewindow="com.wmgllc.twittersphere.view.component.messagewindow.*">
+	<fx:Script>
+		<![CDATA[
+			import com.greensock.TweenMax;
+			import com.wmgllc.twittersphere.controller.event.MessageWindowEvent;
+			import com.wmgllc.twittersphere.model.entity.MessageDTO;
+			import com.wmgllc.twittersphere.utilities.Definitions;
+			import com.wmgllc.twittersphere.view.component.scene.TweetMesh;
+			
+			import mx.events.FlexEvent;
+			
+			[Bindable]
+			protected var messageDTO : MessageDTO;
+			
+			public var tileReference : TweetMesh;
+			
+			protected var yPosition : int;
+			
+			public function initialise(messageDTO_ : MessageDTO, tileReference_ : TweetMesh):void
+			{
+				messageDTO = messageDTO_;
+				
+				tileReference = tileReference_;
+				
+				messageNameLabel.text = messageDTO.messageName;
+				messageBodyLabel.text = messageDTO.messageBody;
+				messageProfileImage.source = messageDTO.messageProfilePicture;
+				messageImage.source = messageDTO.messagePicture;				
+				
+				commentNameLabel.text = messageDTO.commentName;
+				commentBodyLabel.text = messageDTO.commentBody;
+				commentProfileImage.source = messageDTO.commentProfilePicture;
+				
+				if(messageDTO.commentName)
+					commentGroup.includeInLayout = commentGroup.visible = true;
+				
+				if(messageDTO.platform == Definitions.PLATFORM_FACEBOOK)
+				{
+					backgroundColour.color = Definitions.COLOUR_FACEBOOK;
+					closeGraphic.fillColour = Definitions.COLOUR_FACEBOOK;
+					messageNameLabel.styleName = "facebookName";
+					commentNameLabel.styleName = "facebookName";
+					platformIcon.source = "images/icons/facebook_icon.png";
+				}else if(messageDTO.platform == Definitions.PLATFORM_TWITTER)
+				{
+					backgroundColour.color = Definitions.COLOUR_TWITTER;
+					closeGraphic.fillColour = Definitions.COLOUR_TWITTER;
+					messageNameLabel.styleName = "twitterName";
+					commentNameLabel.styleName = "twitterName";
+					platformIcon.source = "images/icons/twitter_icon.png";
+				}else if(messageDTO.platform == Definitions.PLATFORM_INSTAGRAM)
+				{
+					backgroundColour.color = Definitions.COLOUR_INSTAGRAM;
+					closeGraphic.fillColour = Definitions.COLOUR_INSTAGRAM;
+					messageNameLabel.styleName = "facebookName";
+					platformIcon.source = "images/icons/instagram_icon.png";
+				}
+				
+				yPosition = 0;
+			}
+			
+			protected function clickHandler(event : MouseEvent):void
+			{
+				dispatchEvent(new MessageWindowEvent(MessageWindowEvent.CLOSE_WINDOW, messageDTO));
+			}
+			
+			public function finalise():void
+			{
+			}
+			
+			public function scrollDown(amount : int):void
+			{
+				yPosition += amount;
+				TweenMax.to(this, .3, {y:yPosition});
+			}
+			
+			protected function messageImageLoadCompleteHandler(event:Event):void
+			{
+				messageImage.height = messageImage.bitmapData.height / messageImage.bitmapData.width * messageImage.width;
+				dispatchEvent(new MessageWindowEvent(MessageWindowEvent.HEIGHT_UPDATED));
+			}			
+		]]>
+	</fx:Script>
+	
+	<s:Rect width="100%" height="100%">
+		<s:fill>
+			<s:SolidColor id="backgroundColour"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect left="14" right="14" top="14" bottom="14" radiusX="10" radiusY="10">
+		<s:fill>
+			<s:SolidColor color="0xFFFFFF"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:VGroup top="40" bottom="40" left="40" right="40" gap="20">
+		<s:HGroup>
+			<s:Image id="messageProfileImage" width="60" height="60" source="https://pbs.twimg.com/profile_images/1520913761/227727_10150176859379249_101228694248_6732433_3013742_n_bigger.jpg" 
+					 smooth="true"/>
+			<s:Label id="messageNameLabel" paddingTop="10"/>
+		</s:HGroup>
+		<s:Label id="messageBodyLabel" width="{Definitions.MESSAGE_WIDTH - 80}" styleName="messageBody"/>
+		<s:Image id="messageImage" width="100%" smooth="true" complete="messageImageLoadCompleteHandler(event)"/>
+		
+		<s:VGroup id="commentGroup" width="100%" includeInLayout="false" visible="false">
+			<s:Line width="100%">
+				<s:stroke>
+					<s:SolidColorStroke color="0xe9e9e9" weight="1"/>
+				</s:stroke>
+			</s:Line>
+			<s:HGroup>
+				<s:Image id="commentProfileImage" width="60" height="60"
+						 smooth="true"/>
+				<s:Label id="commentNameLabel" paddingTop="20"/>
+			</s:HGroup>
+			<s:Label id="commentBodyLabel" width="{Definitions.MESSAGE_WIDTH - 80}" styleName="messageBody"/>
+		</s:VGroup>
+
+		<s:Group width="100%">
+			<s:Image source="images/icons/nba_icon.png"/>
+			<s:Image id="platformIcon" right="0"/>
+		</s:Group>
+	</s:VGroup>
+	
+	<messagewindow:CloseGraphic id="closeGraphic" top="24" right="24"/>
+	
+</s:Group>
