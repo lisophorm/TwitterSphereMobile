@@ -12,7 +12,7 @@
               <dependency linkage="External" />
             </entry>
           </entries>
-          <sdk name="FLEX_AIR_14_NEW" />
+          <sdk name="air15bleeding" />
         </dependencies>
         <compiler-options />
         <packaging-air-desktop />
@@ -33,7 +33,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/external_src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="FLEX_AIR_14_NEW" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="air15bleeding" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library type="flex">
