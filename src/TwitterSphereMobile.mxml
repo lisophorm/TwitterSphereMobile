@@ -23,7 +23,7 @@
 		]]>
 	</fx:Script>
 	<window:MainWindow id="mainWindow"/>
-    <s:Image source="@embed['assets/images/baloon.png']" />
+    <!--s:Image source="@embed['../assets/images/baloon.png']" /-->
 
 	
 </s:Application>

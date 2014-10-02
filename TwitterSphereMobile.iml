@@ -12,16 +12,16 @@
               <dependency linkage="External" />
             </entry>
           </entries>
-          <sdk name="AIR FLEX 14" />
+          <sdk name="FLEX_AIR_14_NEW" />
         </dependencies>
         <compiler-options />
         <packaging-air-desktop />
         <packaging-android use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/TwitterSphereMobile-app.xml" package-file-name="RealMobile" />
-        <packaging-ios enabled="true" custom-descriptor-path="$MODULE_DIR$/TwitterSphereMobile-app.xml" package-file-name="RealMobile">
+        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/TwitterSphereMobile-app.xml" package-file-name="RealMobile">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/assets" path-in-package="." />
           </files-to-package>
-          <AirSigningOptions keystore-path="$USER_HOME$/Desktop/Certificates.p12" provisioning-profile-path="$USER_HOME$/Desktop/Twittersphere.mobileprovision" />
+          <AirSigningOptions keystore-path="$USER_HOME$/Desktop/Certificates.p12" provisioning-profile-path="$USER_HOME$/Downloads/Twittersphere (2).mobileprovision" />
         </packaging-ios>
       </configuration>
     </configurations>
@@ -33,7 +33,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/external_src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="AIR FLEX 14" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="FLEX_AIR_14_NEW" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library type="flex">
